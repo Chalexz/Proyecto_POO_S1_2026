@@ -1,6 +1,5 @@
 package proyecto.model;
 
-import proyecto.util.Comparable;
 import proyecto.util.Ordenamiento;
 import java.util.ArrayList;
 

@@ -1,6 +1,5 @@
 package proyecto.model;
 
-import proyecto.util.Comparable;
 import java.util.ArrayList;
 
 public abstract class Maquinaria implements Comparable {

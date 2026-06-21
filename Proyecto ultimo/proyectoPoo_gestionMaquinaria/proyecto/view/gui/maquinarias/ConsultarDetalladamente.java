@@ -3,11 +3,11 @@ package proyecto.view.gui.maquinarias;
 import java.awt.*;
 import javax.swing.*;
 import proyecto.view.gui.componentes.ConstructorCampos;
+import proyecto.view.gui.dialogos.DialogoMensaje;
 
 public class ConsultarDetalladamente extends JPanel{ 
     private JTextField codigoBuscar;
     private JTextArea camResultado;
-    private JButton btnConsultar;
     
     public ConsultarDetalladamente() {
         this.setLayout(new BorderLayout());
@@ -34,7 +34,7 @@ public class ConsultarDetalladamente extends JPanel{
         panelFormulario.add(Box.createVerticalStrut(20));
 
         // Boton Consultar
-        btnConsultar = new JButton("Consultar");
+        JButton btnConsultar = new JButton("Consultar");
         btnConsultar.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnConsultar.setFont(new Font("Arial", Font.PLAIN, 15));
         btnConsultar.setForeground(Color.WHITE);
@@ -61,17 +61,18 @@ public class ConsultarDetalladamente extends JPanel{
         panelFormulario.add(scrollResultado);
 
         this.add(panelFormulario, BorderLayout.NORTH);
+
+        btnConsultar.addActionListener(e -> {
+            consultarMaquinaria();
+        });
     }
 
-    public JButton getBotonConsultar(){
-        return btnConsultar;
-    }
-
-    public String leerCodigoBuscar(){
-        return codigoBuscar.getText().trim();
-    }
-
-    public void mostrarResultado(String resultado){
-        camResultado.setText(resultado);
+    private void consultarMaquinaria() {
+        String codigo = codigoBuscar.getText().trim();
+        if (codigo.isEmpty()) {
+            DialogoMensaje.mostrarAdvertencia(this, "Por favor, ingrese un código para consultar.");
+            return;
+        }
+        camResultado.setText("Detalles de la maquinaria con código '" + codigo + "':\n- Detalle 1\n- Detalle 2\n...");
     }
 }

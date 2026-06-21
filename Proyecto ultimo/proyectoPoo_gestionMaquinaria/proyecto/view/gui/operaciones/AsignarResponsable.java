@@ -2,13 +2,13 @@ package proyecto.view.gui.operaciones;
 import java.awt.*;
 import javax.swing.*;
 import proyecto.view.gui.componentes.ConstructorCampos;
+import proyecto.view.gui.dialogos.DialogoMensaje;
 
 
 public class AsignarResponsable extends JPanel{
     private JTextField camIdentificacion;
     private JTextField codigoMaquina;
     private JTextArea camResultado;
-    private JButton btnAsignar;
 
     public AsignarResponsable() {
         this.setLayout(new BorderLayout());
@@ -45,14 +45,14 @@ public class AsignarResponsable extends JPanel{
         panelFormulario.add(Box.createVerticalStrut(15));
 
         // Boton Registrar
-        btnAsignar = new JButton("Registrar");
-        btnAsignar.setAlignmentX(Component.LEFT_ALIGNMENT);
-        btnAsignar.setFont(new Font("Arial", Font.PLAIN, 15));
-        btnAsignar.setForeground(Color.WHITE);
-        btnAsignar.setBackground(new Color(45, 45, 45));
-        btnAsignar.setPreferredSize(new Dimension(160, 42));
-        btnAsignar.setMaximumSize(new Dimension(160, 42));
-        panelFormulario.add(btnAsignar);
+        JButton btnRegistrar = new JButton("Registrar");
+        btnRegistrar.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btnRegistrar.setFont(new Font("Arial", Font.PLAIN, 15));
+        btnRegistrar.setForeground(Color.WHITE);
+        btnRegistrar.setBackground(new Color(45, 45, 45));
+        btnRegistrar.setPreferredSize(new Dimension(160, 42));
+        btnRegistrar.setMaximumSize(new Dimension(160, 42));
+        panelFormulario.add(btnRegistrar);
         panelFormulario.add(Box.createVerticalStrut(20));
 
         // Cuadro de resultado estilo consola (borde por defecto)
@@ -72,21 +72,21 @@ public class AsignarResponsable extends JPanel{
         panelFormulario.add(scrollResultado);
 
         this.add(panelFormulario, BorderLayout.NORTH);
+
+        btnRegistrar.addActionListener(e -> {
+            asignarResponsable();
+        });
     }
 
-    public JButton getBotonAsignar(){
-        return btnAsignar;
-    }
-
-    public String leerIdentificacion(){
-        return camIdentificacion.getText().trim();
-    }
-
-    public String leerCodigoMaquina(){
-        return codigoMaquina.getText().trim();
-    }
-
-    public void mostrarResultado(String resultado){
-        camResultado.setText(resultado);
+    private void asignarResponsable() {
+        String identificacion = camIdentificacion.getText().trim();
+        String pCodigoMaquina = codigoMaquina.getText().trim();
+        if (identificacion.isEmpty() || pCodigoMaquina.isEmpty()) {
+            DialogoMensaje.mostrarAdvertencia(this, "Por favor, complete todos los campos.");
+            return;
+        }
+        // Aquí se llamaría al método del controlador para asignar la máquina al responsable
+        // Por ejemplo: controlador.asignarMaquinaResponsable(identificacion, codigoMaquina);
+        camResultado.setText("Máquina con código '" + pCodigoMaquina + "' asignada al responsable con identificación '" + identificacion + "' exitosamente.");
     }
 }

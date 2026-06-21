@@ -3,6 +3,7 @@ package proyecto.view.gui.maquinarias;
 import java.awt.*;
 import javax.swing.*;
 import proyecto.view.gui.componentes.ConstructorCampos;
+import proyecto.view.gui.dialogos.DialogoMensaje;
 
 public class PanelRegistrarHerramientaIndustrial extends JPanel{
     private JTextField Valor;
@@ -12,7 +13,6 @@ public class PanelRegistrarHerramientaIndustrial extends JPanel{
     private JTextField ValorSalvamento;
     private JTextField TasaDepreciacion;
     private JTextArea camResultado;
-    private JButton btnRegistrar;
 
     public PanelRegistrarHerramientaIndustrial() {
         this.setLayout(new BorderLayout());
@@ -83,7 +83,7 @@ public class PanelRegistrarHerramientaIndustrial extends JPanel{
         panelFormulario.add(Box.createVerticalStrut(15));
 
         // Boton Registrar
-        btnRegistrar = new JButton("Registrar");
+        JButton btnRegistrar = new JButton("Registrar");
         btnRegistrar.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnRegistrar.setFont(new Font("Arial", Font.PLAIN, 15));
         btnRegistrar.setForeground(Color.WHITE);
@@ -110,37 +110,26 @@ public class PanelRegistrarHerramientaIndustrial extends JPanel{
         panelFormulario.add(scrollResultado);
 
         this.add(panelFormulario, BorderLayout.NORTH);
+
+        btnRegistrar.addActionListener(e -> {
+            registrarHerramientaIndustrial();
+        });
     }
 
-    public JButton getBotonRegistrar(){
-        return btnRegistrar;
-    }
+    private void registrarHerramientaIndustrial() {
+        String valor = Valor.getText().trim();
+        String vidaUtil = VidaUtil.getText().trim();
+        String marca = Marca.getText().trim();
+        String descripcion = Descripcion.getText().trim();
+        String valorSalvamento = ValorSalvamento.getText().trim();
+        String tasaDepreciacion = TasaDepreciacion.getText().trim();
 
-    public String leerValor(){
-        return Valor.getText().trim();
-    }
-
-    public String leerVidaUtil(){
-        return VidaUtil.getText().trim();
-    }
-
-    public String leerMarca(){
-        return Marca.getText().trim();
-    }
-
-    public String leerDescripcion(){
-        return Descripcion.getText().trim();
-    }
-
-    public String leerValorSalvamento(){
-        return ValorSalvamento.getText().trim();
-    }
-    
-    public String leerTasaDepreciacion(){
-        return TasaDepreciacion.getText().trim();
-    }
-
-    public void mostrarResultado(String resultado){
-        camResultado.setText(resultado);
+        if (valor.isEmpty() || vidaUtil.isEmpty() || marca.isEmpty() || descripcion.isEmpty() || valorSalvamento.isEmpty() || tasaDepreciacion.isEmpty()) {
+            DialogoMensaje.mostrarAdvertencia(this, "Por favor, complete todos los campos.");
+            return;
+        }
+        // Aquí se llamaría al método del controlador para registrar el responsable
+        // Por ejemplo: controlador.registrarResponsable(identificacion, fechaNacimiento, nombreCompleto);
+        camResultado.setText("Herramienta industrial registrada exitosamente.");
     }
 }

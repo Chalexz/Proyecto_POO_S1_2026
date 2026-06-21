@@ -3,11 +3,11 @@ package proyecto.view.gui.Depreciacion;
 import java.awt.*;
 import javax.swing.*;
 import proyecto.view.gui.componentes.ConstructorCampos;
+import proyecto.view.gui.dialogos.DialogoMensaje;
 
 public class PanelTablasPorResponsable extends JPanel{
     private JTextArea camResultado;
     private JTextField camIdentificacion;
-    private JButton btnListar;
     
     public PanelTablasPorResponsable(){
         this.setLayout(new BorderLayout());
@@ -34,7 +34,7 @@ public class PanelTablasPorResponsable extends JPanel{
         panelFormulario.add(Box.createVerticalStrut(20));
 
         // Boton Listar
-        btnListar = new JButton("Refrescar Listado");
+        JButton btnListar = new JButton("Refrescar Listado");
         btnListar.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnListar.setFont(new Font("Arial", Font.PLAIN, 15));
         btnListar.setForeground(Color.WHITE);
@@ -61,17 +61,18 @@ public class PanelTablasPorResponsable extends JPanel{
         panelFormulario.add(scrollResultado);
 
         this.add(panelFormulario, BorderLayout.NORTH);
+
+        btnListar.addActionListener(e -> {
+            listarDepreciacionPorResponsable();
+        });
     }
 
-    public JButton getBotonListar(){
-        return btnListar;
-    }
-
-    public String leerIdentificacion(){
-        return camIdentificacion.getText().trim();
-    }
-
-    public void mostrarResultado(String resultado){
-        camResultado.setText(resultado);
+    private void listarDepreciacionPorResponsable() {
+        String identificacion = camIdentificacion.getText().trim();
+        if (identificacion.isEmpty()) {
+            DialogoMensaje.mostrarAdvertencia(this, "Por favor, ingrese la identificación del responsable.");
+            return;
+        }
+        camResultado.setText("Tablas de depreciación del responsable con identificación '" + identificacion + "'.");
     }
 }

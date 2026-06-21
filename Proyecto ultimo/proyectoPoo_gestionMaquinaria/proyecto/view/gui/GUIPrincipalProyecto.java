@@ -2,10 +2,8 @@ package proyecto.view.gui;
 
 import java.awt.*;
 import javax.swing.*;
-import proyecto.model.Maquinaria;
 import proyecto.model.Responsable;
 import proyecto.model.Sistema;
-import proyecto.util.Validador;
 import proyecto.view.gui.Depreciacion.PanelTablasPorResponsable;
 import proyecto.view.gui.dialogos.DialogoMensaje;
 import proyecto.view.gui.maquinarias.ConsultarDetalladamente;
@@ -55,7 +53,6 @@ public class GUIPrincipalProyecto {
         centro.setBackground(new Color(70,70,70));
 
         Sistema sistema = new Sistema();
-        Validador validador = new Validador();
 
         //--------------------------------------------------------------------------------------
         PanelRegistrarResponsable PanelRegistrarResponsable = new PanelRegistrarResponsable();
@@ -63,17 +60,9 @@ public class GUIPrincipalProyecto {
             String pIdentificacion = PanelRegistrarResponsable.leerIdentificacion();
             String pFechaNacimiento = PanelRegistrarResponsable.leerFechaNacimiento();
             String pNombreCompleto = PanelRegistrarResponsable.leerNombreCompleto();
-            if (!validador.esStringValido(pIdentificacion)) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarResponsable, "La identificación no puede estar vacía.");
-                return;
-            }
-            if (!validador.esFechaValida(pFechaNacimiento)) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarResponsable, "La fecha de nacimiento no es válida. Use el formato dd/mm/aaaa.");
-                return;
-            }
-            if (!validador.esStringValido(pNombreCompleto)) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarResponsable, "El nombre completo no puede estar vacío.");
-                return;
+            if (pIdentificacion.isEmpty() || pFechaNacimiento.isEmpty() || pNombreCompleto.isEmpty()) {
+            DialogoMensaje.mostrarAdvertencia(PanelRegistrarResponsable, "Por favor, complete todos los campos.");
+            return;
             }
             String resultado = sistema.registrarResponsable(pIdentificacion, pFechaNacimiento, pNombreCompleto);
             PanelRegistrarResponsable.mostrarResultado(resultado);
@@ -85,7 +74,7 @@ public class GUIPrincipalProyecto {
         PanelEliminarResponsable PanelEliminarResponsable = new PanelEliminarResponsable();
         PanelEliminarResponsable.getBotonBuscar().addActionListener(e -> {
             String identificacion = PanelEliminarResponsable.leerIdentificacion();
-            if (!validador.esStringValido(identificacion)) {
+            if (identificacion.isEmpty()) {
                 DialogoMensaje.mostrarAdvertencia(PanelEliminarResponsable, "Por favor, ingrese una identificación.");
                 return;
             }
@@ -117,152 +106,34 @@ public class GUIPrincipalProyecto {
         //--------------------------------------------------------------------------------------
         PanelConsultarResponsable PanelConsultarResponsable = new PanelConsultarResponsable();
         PanelConsultarResponsable.getBotonConsultar().addActionListener(e -> {
-            String identificacion = PanelConsultarResponsable.leerIdentificacion();
-            if (!validador.esStringValido(identificacion)) {
-                DialogoMensaje.mostrarAdvertencia(PanelConsultarResponsable, "Por favor, ingrese una identificación.");
-                return;
-            }
-            Responsable r = sistema.buscarResponsablePorIdentificacion(identificacion);
-            if (r == null) {
-                PanelConsultarResponsable.mostrarResultado("No existe un responsable registrado con esa identificación.");
-            } else {
-                PanelConsultarResponsable.mostrarResultado(r.toString());
-            }
+        String identificacion = PanelConsultarResponsable.leerIdentificacion();
+        if (identificacion.isEmpty()) {
+            DialogoMensaje.mostrarAdvertencia(PanelConsultarResponsable, "Por favor, ingrese una identificación.");
+            return;
+        }
+        Responsable r = sistema.buscarResponsablePorIdentificacion(identificacion);
+        if (r == null) {
+            PanelConsultarResponsable.mostrarResultado("No existe un responsable registrado con esa identificación.");
+        } else {
+            PanelConsultarResponsable.mostrarResultado(r.toString());
+        }
         });
         //--------------------------------------------------------------------------------------
 
         //--------------------------------------------------------------------------------------
         PanelRegistrarHerramientaIndustrial PanelRegistrarHerramientaIndustrial = new PanelRegistrarHerramientaIndustrial();
-        PanelRegistrarHerramientaIndustrial.getBotonRegistrar().addActionListener(e -> {
-            String valorTexto = PanelRegistrarHerramientaIndustrial.leerValor();
-            String vidaUtilTexto = PanelRegistrarHerramientaIndustrial.leerVidaUtil();
-            String marca = PanelRegistrarHerramientaIndustrial.leerMarca();
-            String descripcion = PanelRegistrarHerramientaIndustrial.leerDescripcion();
-            String salvamentoTexto = PanelRegistrarHerramientaIndustrial.leerValorSalvamento();
-            String tasaTexto = PanelRegistrarHerramientaIndustrial.leerTasaDepreciacion();
-
-            if (!validador.esStringValido(marca)) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarHerramientaIndustrial, "La marca no puede estar vacía.");
-                return;
-            }
-            if (!validador.esStringValido(descripcion)) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarHerramientaIndustrial, "La descripción no puede estar vacía.");
-                return;
-            }
-            try {
-                double valor = Double.parseDouble(valorTexto);
-                int vidaUtil = Integer.parseInt(vidaUtilTexto);
-                double salvamento = Double.parseDouble(salvamentoTexto);
-                double tasa = Double.parseDouble(tasaTexto);
-
-                if (!validador.esDoublePositivo(valor)) {
-                    DialogoMensaje.mostrarAdvertencia(PanelRegistrarHerramientaIndustrial, "El valor debe ser mayor que cero.");
-                    return;
-                }
-                if (!validador.esIntPositivo(vidaUtil)) {
-                    DialogoMensaje.mostrarAdvertencia(PanelRegistrarHerramientaIndustrial, "La vida útil debe ser mayor que cero.");
-                    return;
-                }
-                if (!validador.esDoubleNoNegativo(salvamento) || !validador.esMenorQueEstricto(salvamento, valor)) {
-                    DialogoMensaje.mostrarAdvertencia(PanelRegistrarHerramientaIndustrial, "El valor de salvamento debe ser mayor o igual a cero y menor que el valor inicial.");
-                    return;
-                }
-                if (!validador.esDoublePositivo(tasa)) {
-                    DialogoMensaje.mostrarAdvertencia(PanelRegistrarHerramientaIndustrial, "La tasa de depreciación debe ser mayor que cero.");
-                    return;
-                }
-
-                String codigo = sistema.registrarHerramientaIndustrial(valor, vidaUtil, marca, descripcion, salvamento, tasa);
-                PanelRegistrarHerramientaIndustrial.mostrarResultado("Herramienta registrada con código: " + codigo);
-            } catch (NumberFormatException ex) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarHerramientaIndustrial, "Valor, vida útil, salvamento y tasa deben ser numéricos.");
-            }
-        });
         //--------------------------------------------------------------------------------------
 
         //--------------------------------------------------------------------------------------
         PanelRegistrarEquipoIndustrial PanelRegistrarEquipoIndustrial = new PanelRegistrarEquipoIndustrial();
-        PanelRegistrarEquipoIndustrial.getBotonRegistrar().addActionListener(e -> {
-            String valorTexto = PanelRegistrarEquipoIndustrial.leerValor();
-            String vidaUtilTexto = PanelRegistrarEquipoIndustrial.leerVidaUtil();
-            String marca = PanelRegistrarEquipoIndustrial.leerMarca();
-            String descripcion = PanelRegistrarEquipoIndustrial.leerDescripcion();
-            String pesoTexto = PanelRegistrarEquipoIndustrial.leerPeso();
-            String volumenTexto = PanelRegistrarEquipoIndustrial.leerVolumen();
-
-            if (!validador.esStringValido(marca)) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarEquipoIndustrial, "La marca no puede estar vacía.");
-                return;
-            }
-            if (!validador.esStringValido(descripcion)) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarEquipoIndustrial, "La descripción no puede estar vacía.");
-                return;
-            }
-            try {
-                double valor = Double.parseDouble(valorTexto);
-                int vidaUtil = Integer.parseInt(vidaUtilTexto);
-                double peso = Double.parseDouble(pesoTexto);
-                double volumen = Double.parseDouble(volumenTexto);
-
-                if (!validador.esDoublePositivo(valor)) {
-                    DialogoMensaje.mostrarAdvertencia(PanelRegistrarEquipoIndustrial, "El valor debe ser mayor que cero.");
-                    return;
-                }
-                if (!validador.esIntPositivo(vidaUtil)) {
-                    DialogoMensaje.mostrarAdvertencia(PanelRegistrarEquipoIndustrial, "La vida útil debe ser mayor que cero.");
-                    return;
-                }
-                if (!validador.esDoublePositivo(peso)) {
-                    DialogoMensaje.mostrarAdvertencia(PanelRegistrarEquipoIndustrial, "El peso debe ser mayor que cero.");
-                    return;
-                }
-                if (!validador.esDoublePositivo(volumen)) {
-                    DialogoMensaje.mostrarAdvertencia(PanelRegistrarEquipoIndustrial, "El volumen debe ser mayor que cero.");
-                    return;
-                }
-
-                String codigo = sistema.registrarEquipoIndustrial(valor, vidaUtil, marca, descripcion, peso, volumen);
-                PanelRegistrarEquipoIndustrial.mostrarResultado("Equipo registrado con código: " + codigo);
-            } catch (NumberFormatException ex) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarEquipoIndustrial, "Valor, vida útil, peso y volumen deben ser numéricos.");
-            }
-        });
         //--------------------------------------------------------------------------------------
 
         //--------------------------------------------------------------------------------------
         ConsultarDetalladamente ConsultarDetalladamente = new ConsultarDetalladamente();
-        ConsultarDetalladamente.getBotonConsultar().addActionListener(e -> {
-            String codigo = ConsultarDetalladamente.leerCodigoBuscar();
-            if (!validador.esStringValido(codigo)) {
-                DialogoMensaje.mostrarAdvertencia(ConsultarDetalladamente, "Por favor, ingrese un código.");
-                return;
-            }
-            Maquinaria m = sistema.buscarMaquinariaPorCodigo(codigo);
-            if (m == null) {
-                ConsultarDetalladamente.mostrarResultado("No existe una maquinaria registrada con ese código.");
-            } else {
-                ConsultarDetalladamente.mostrarResultado(m.toString());
-            }
-        });
         //--------------------------------------------------------------------------------------
 
         //--------------------------------------------------------------------------------------
         AsignarResponsable AsignarResponsable = new AsignarResponsable();
-        AsignarResponsable.getBotonAsignar().addActionListener(e -> {
-            String identificacion = AsignarResponsable.leerIdentificacion();
-            String codigoMaquinaria = AsignarResponsable.leerCodigoMaquina();
-
-            if (!validador.esStringValido(identificacion) || !validador.esStringValido(codigoMaquinaria)) {
-                DialogoMensaje.mostrarAdvertencia(AsignarResponsable, "Por favor, complete ambos campos.");
-                return;
-            }
-            boolean exito = sistema.asignarMaquinariaAResponsable(identificacion, codigoMaquinaria);
-            if (exito) {
-                AsignarResponsable.mostrarResultado("Maquinaria asignada exitosamente al responsable.");
-            } else {
-                AsignarResponsable.mostrarResultado("No se pudo asignar: responsable o maquinaria no existen, o la maquinaria ya tiene un responsable asignado.");
-            }
-        });
         //--------------------------------------------------------------------------------------
         
         //--------------------------------------------------------------------------------------
@@ -276,38 +147,26 @@ public class GUIPrincipalProyecto {
         //--------------------------------------------------------------------------------------
         PanelRegistrarMantenimiento PanelRegistrarMantenimiento = new PanelRegistrarMantenimiento();
         PanelRegistrarMantenimiento.getBotonRegistrar().addActionListener(e -> {
-            String codigoMaq = PanelRegistrarMantenimiento.getCodigo();
-            String costoTexto = PanelRegistrarMantenimiento.getCosto();
-            String fecha = PanelRegistrarMantenimiento.getfecha();
-            String descripcion = PanelRegistrarMantenimiento.getDescripcion();
+        String codigoMaq = PanelRegistrarMantenimiento.getCodigo();
+        String costoTexto = PanelRegistrarMantenimiento.getCosto();
+        String fecha = PanelRegistrarMantenimiento.getfecha();
+        String descripcion = PanelRegistrarMantenimiento.getDescripcion();
 
-            if (!validador.esStringValido(codigoMaq)) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarMantenimiento, "El código de la maquinaria no puede estar vacío.");
-                return;
+        if (codigoMaq.isEmpty() || costoTexto.isEmpty() || fecha.isEmpty() || descripcion.isEmpty()) {
+            DialogoMensaje.mostrarAdvertencia(PanelRegistrarMantenimiento, "Por favor, complete todos los campos.");
+            return;
+        }
+        try {
+            double costo = Double.parseDouble(costoTexto);
+            boolean exito = sistema.registrarMantenimiento(codigoMaq, costo, fecha, descripcion);
+            if (exito) {
+                PanelRegistrarMantenimiento.mostrarResultado("Mantenimiento registrado exitosamente para la maquinaria '" + codigoMaq + "'.");
+            } else {
+                PanelRegistrarMantenimiento.mostrarResultado("No existe una maquinaria con ese código.");
             }
-            if (!validador.esFechaValida(fecha)) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarMantenimiento, "Fecha inválida. Use dd/mm/aaaa.");
-                return;
-            }
-            if (!validador.esStringValido(descripcion)) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarMantenimiento, "La descripción no puede estar vacía.");
-                return;
-            }
-            try {
-                double costo = Double.parseDouble(costoTexto);
-                if (!validador.esDoubleNoNegativo(costo)) {
-                    DialogoMensaje.mostrarAdvertencia(PanelRegistrarMantenimiento, "El costo debe ser mayor o igual a cero.");
-                    return;
-                }
-                boolean exito = sistema.registrarMantenimiento(codigoMaq, costo, fecha, descripcion);
-                if (exito) {
-                    PanelRegistrarMantenimiento.mostrarResultado("Mantenimiento registrado exitosamente para la maquinaria '" + codigoMaq + "'.");
-                } else {
-                    PanelRegistrarMantenimiento.mostrarResultado("No existe una maquinaria con ese código.");
-                }
-            } catch (NumberFormatException ex) {
-                DialogoMensaje.mostrarAdvertencia(PanelRegistrarMantenimiento, "El costo debe ser numérico.");
-            }
+        } catch (NumberFormatException ex) {
+            DialogoMensaje.mostrarAdvertencia(PanelRegistrarMantenimiento, "El costo debe ser numérico.");
+        }
         });
         //--------------------------------------------------------------------------------------
 
@@ -315,7 +174,7 @@ public class GUIPrincipalProyecto {
         MauinariaAsignadaResponsable MaquinariaAsignadaResponsable = new MauinariaAsignadaResponsable();
         MaquinariaAsignadaResponsable.getBotonConsultar().addActionListener(e -> {
             String identificacion = MaquinariaAsignadaResponsable.leerIdentificacion();
-            if (!validador.esStringValido(identificacion)) {
+            if (identificacion.isEmpty()) {
                 DialogoMensaje.mostrarAdvertencia(MaquinariaAsignadaResponsable, "Por favor, ingrese una identificación.");
                 return;
             }
@@ -332,35 +191,7 @@ public class GUIPrincipalProyecto {
 
         //--------------------------------------------------------------------------------------
         ListarTodas ListarTodas = new ListarTodas();
-        ListarTodas.getBotonListar().addActionListener(e -> {
-            String resultado = sistema.listarMaquinariasPorVidaUtil().toString();
-            ListarTodas.mostrarResultado(resultado);
-        });
-        //--------------------------------------------------------------------------------------
-
-        //--------------------------------------------------------------------------------------
         PanelTablasPorResponsable PanelTablasPorResponsable = new PanelTablasPorResponsable();
-        PanelTablasPorResponsable.getBotonListar().addActionListener(e -> {
-            String identificacion = PanelTablasPorResponsable.leerIdentificacion();
-            if (!validador.esStringValido(identificacion)) {
-                DialogoMensaje.mostrarAdvertencia(PanelTablasPorResponsable, "Por favor, ingrese una identificación.");
-                return;
-            }
-            Responsable r = sistema.buscarResponsablePorIdentificacion(identificacion);
-            if (r == null) {
-                PanelTablasPorResponsable.mostrarResultado("No existe un responsable registrado con esa identificación.");
-            } else if (r.cantidadMaquinarias() == 0) {
-                PanelTablasPorResponsable.mostrarResultado("El responsable no tiene maquinarias asignadas.");
-            } else {
-                StringBuilder resultado = new StringBuilder();
-                for (Maquinaria m : r.getMaquinarias()) {
-                    resultado.append("Maquinaria: ").append(m.getCodigo()).append("\n");
-                    resultado.append(m.calcularTablaDepreciacion()).append("\n");
-                }
-                PanelTablasPorResponsable.mostrarResultado(resultado.toString());
-            }
-        });
-        //--------------------------------------------------------------------------------------
         centro.add(PanelRegistrarResponsable, BorderLayout.CENTER);
 
         // OPCIONES
@@ -450,7 +281,7 @@ public class GUIPrincipalProyecto {
                             centro.add(PanelRegistrarMantenimiento, BorderLayout.CENTER);
                             break;
                         case "Maq. Asig. Responsable":
-                            centro.add(MaquinariaAsignadaResponsable, BorderLayout.CENTER);
+                            centro.add(MauinariaAsignadaResponsable, BorderLayout.CENTER);
                             break;
                         case "Listar":
                             centro.add(ListarResponsable, BorderLayout.CENTER);

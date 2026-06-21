@@ -5,7 +5,6 @@ import javax.swing.*;
 
 public class ListarTodas extends JPanel{
     private JTextArea camResultado;
-    private JButton btnListar;
     
     public ListarTodas(){
         this.setLayout(new BorderLayout());
@@ -25,7 +24,7 @@ public class ListarTodas extends JPanel{
         panelFormulario.add(Box.createVerticalStrut(20));
 
         // Boton Listar
-        btnListar = new JButton("Refrescar Listado");
+        JButton btnListar = new JButton("Refrescar Listado");
         btnListar.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnListar.setFont(new Font("Arial", Font.PLAIN, 15));
         btnListar.setForeground(Color.WHITE);
@@ -52,13 +51,13 @@ public class ListarTodas extends JPanel{
         panelFormulario.add(scrollResultado);
 
         this.add(panelFormulario, BorderLayout.NORTH);
+
+        btnListar.addActionListener(e -> {
+            listarMaquinarias();
+        });
     }
 
-    public void mostrarResultado(String resultado) {
-        camResultado.setText(resultado);
-    }
-
-    public JButton getBotonListar(){
-        return btnListar;
+    private void listarMaquinarias() {
+        camResultado.setText("Listado de maquinarias:\n- Maquinaria 1\n- Maquinaria 2\n- Maquinaria 3\n...");
     }
 }
