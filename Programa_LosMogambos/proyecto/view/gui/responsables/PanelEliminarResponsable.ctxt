@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=PanelEliminarResponsable
+comment1.params=
+comment1.target=PanelEliminarResponsable()
+comment2.params=
+comment2.target=java.lang.String\ leerIdentificacion()
+comment3.params=texto
+comment3.target=void\ mostrarResultado(java.lang.String)
+comment4.params=
+comment4.target=javax.swing.JButton\ getBotonBuscar()
+comment5.params=
+comment5.target=javax.swing.JButton\ getBotonEliminar()
+comment6.params=identificacion
+comment6.target=void\ confirmarBusqueda(java.lang.String)
+comment7.params=
+comment7.target=java.lang.String\ obtenerIdentificacionEncontrada()
+numComments=8

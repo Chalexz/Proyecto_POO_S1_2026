@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=ConstructorCampos
+comment1.params=columnas
+comment1.target=javax.swing.JTextField\ crearCampoTexto(int)
+comment2.params=texto\ campo
+comment2.target=javax.swing.JPanel\ crearCampoConEtiqueta(java.lang.String,\ javax.swing.JTextField)
+numComments=3
