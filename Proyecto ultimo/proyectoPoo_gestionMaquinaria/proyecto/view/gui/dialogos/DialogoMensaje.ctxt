@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=DialogoMensaje
+comment1.params=padre\ mensaje
+comment1.target=void\ mostrarError(java.awt.Component,\ java.lang.String)
+comment2.params=padre\ mensaje
+comment2.target=void\ mostrarExito(java.awt.Component,\ java.lang.String)
+comment3.params=padre\ mensaje
+comment3.target=void\ mostrarAdvertencia(java.awt.Component,\ java.lang.String)
+comment4.params=padre\ mensaje
+comment4.target=boolean\ confirmar(java.awt.Component,\ java.lang.String)
+numComments=5
