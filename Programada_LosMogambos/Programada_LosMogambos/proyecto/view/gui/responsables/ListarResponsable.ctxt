@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=ListarResponsable
+comment1.params=
+comment1.target=ListarResponsable()
+comment2.params=
+comment2.target=javax.swing.JButton\ getBotonListar()
+comment3.params=texto
+comment3.target=void\ mostrarResultado(java.lang.String)
+numComments=4
